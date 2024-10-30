@@ -2,11 +2,24 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import * as dotenv from "dotenv";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+
+  // Swagger Configuration
+  const config = new DocumentBuilder()
+    .setTitle('My API')
+    .setDescription('API documentation for my NestJS application')
+    .setVersion('1.0')
+    .addTag('auth') // You can add tags as needed
+    .build();
+  
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   // Enable versioning with the correct type
   app.enableVersioning({
     type: VersioningType.URI, // Use the VersioningType enum
